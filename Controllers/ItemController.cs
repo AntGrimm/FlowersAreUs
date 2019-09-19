@@ -54,10 +54,17 @@ namespace FlowersAreUs.Controllers
 
     // GET api/item/OutOfStock
     [HttpGet("OutOfStock")]
-    public ActionResult<IEnumerable<Item>> GetOutOfStockItems()
+    public ActionResult<Item> GetOutOfStockItems()
     {
-      var items = context.Items.OrderByDescending(flowersareus => flowersareus.NumberInStock == 0);
-      return items.ToList();
+      var items = context.Items.Where(i => i.NumberInStock == 0);
+      if (items == null)
+      {
+        return NotFound();
+      }
+      else
+      {
+        return Ok(items);
+      }
     }
 
     [HttpPost]
