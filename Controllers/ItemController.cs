@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using flowersareus;
 using FlowersAreUs.Models;
@@ -29,11 +30,59 @@ namespace FlowersAreUs.Controllers
       }
     }
 
-    // [HttpGet]
-    // public ActionResult<Item> GetAllItems()
-    // {
-    //   var items = context.Items.OrderByDescending(flowersareus => flowersareus.DateOrdered);
-    //   return items;
-    // }
+    [HttpGet("bySku/{sku}/")]
+    public ActionResult<Item> GetOneItemBySku(int sku)
+    {
+      var item = context.Items.FirstOrDefault(i => i.Sku == sku);
+      if (item == null)
+      {
+        return NotFound();
+      }
+      else
+      {
+        return Ok(item);
+      }
+    }
+
+    // GET /api/item
+    [HttpGet]
+    public ActionResult<IEnumerable<Item>> GetAllItems()
+    {
+      var items = context.Items.OrderByDescending(flowersareus => flowersareus.DateOrdered);
+      return items.ToList();
+    }
+
+    // GET api/item/OutOfStock
+    [HttpGet("OutOfStock")]
+    public ActionResult<IEnumerable<Item>> GetOutOfStockItems()
+    {
+      var items = context.Items.OrderByDescending(flowersareus => flowersareus.NumberInStock == 0);
+      return items.ToList();
+    }
+
+    [HttpPost]
+    public ActionResult<Item> CreateItem([FromBody]Item entry)
+    {
+      context.Items.Add(entry);
+      context.SaveChanges();
+      return entry;
+    }
+
+    [HttpPut("{id}")]
+    public ActionResult<Item> UpdateItem(int id, [FromBody]Item updateEntry)
+    {
+      context.Items.Update(updateEntry);
+      context.SaveChanges();
+      return updateEntry;
+    }
+
+    [HttpDelete("{id}")]
+    public ActionResult<Item> DeleteItem(int id)
+    {
+      var item = context.Items.FirstOrDefault(i => i.Id == id);
+      context.Items.Remove(item);
+      context.SaveChanges();
+      return item;
+    }
   }
 }
