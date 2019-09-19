@@ -3,6 +3,7 @@ using System.Linq;
 using flowersareus;
 using FlowersAreUs.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace FlowersAreUs.Controllers
 {
@@ -78,9 +79,17 @@ namespace FlowersAreUs.Controllers
     [HttpPut("{id}")]
     public ActionResult<Item> UpdateItem(int id, [FromBody]Item updateEntry)
     {
-      context.Items.Update(updateEntry);
+      if (id != updateEntry.Id)
+      {
+        return BadRequest();
+      }
+      context.Entry(updateEntry).State = EntityState.Modified;
       context.SaveChanges();
       return updateEntry;
+
+      // context.Items.Update(updateEntry);
+      // context.SaveChanges();
+      // return updateEntry;
     }
 
     [HttpDelete("{id}")]
@@ -89,7 +98,8 @@ namespace FlowersAreUs.Controllers
       var item = context.Items.FirstOrDefault(i => i.Id == id);
       context.Items.Remove(item);
       context.SaveChanges();
-      return item;
+      return Ok(new { Message = "Item was successfully deleted", item = item });
+      //return item;
     }
   }
 }
