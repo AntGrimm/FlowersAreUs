@@ -11,5 +11,9 @@ namespace FlowersAreUs.Models
     public int NumberInStock { get; set; }
     public double Price { get; set; }
     public DateTime DateOrdered { get; set; } = DateTime.Now;
+
+    public int LocationId { get; set; }
+
+    public Locations Locations { get; set; }
   }
 }

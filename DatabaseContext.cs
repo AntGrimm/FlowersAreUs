@@ -46,5 +46,6 @@ namespace flowersareus
     }
 
     public DbSet<Item> Items { get; set; }
+    public DbSet<Locations> Locations { get; set; }
   }
 }
