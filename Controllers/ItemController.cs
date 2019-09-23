@@ -47,9 +47,10 @@ namespace FlowersAreUs.Controllers
 
     // GET /api/item
     [HttpGet]
-    public ActionResult<IEnumerable<Item>> GetAllItems()
+    public ActionResult<IEnumerable<Item>> GetAllItems(int locationId, [FromBody]Item item)
     {
       var items = context.Items.OrderByDescending(flowersareus => flowersareus.DateOrdered);
+      item.LocationId = locationId;
       return items.ToList();
     }
 
